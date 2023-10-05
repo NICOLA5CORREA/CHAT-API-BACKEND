@@ -1,0 +1,9 @@
+const path = require("node:path"); // => para hacer rutas dentro de NODE.JS
+
+module.exports = {
+    'config': path.resolve('src', 'config', 'config.js'), // => export default
+    'models-path': path.resolve('src', 'models'),
+    'seeders-path': path.resolve('src', 'seeders'),
+    'migrations-path': path.resolve('src', 'migrations'),
+} ;
+
