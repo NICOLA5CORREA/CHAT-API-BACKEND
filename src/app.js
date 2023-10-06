@@ -1,3 +1,4 @@
+const path = require('node:path');
 const express = require("express"); // cjs -common java script
 const morgan = require("morgan");
 const cors = require("cors");
@@ -10,7 +11,9 @@ const app = express();
 
 app.use(express.json());
 app.use(morgan("tiny"));
+app.use(express.json());
 app.use(cors());
+app.use('/avatar', express.static(path.join(__dirname, '../public') ) );
 
 app.get("/", (req, res) => {
   res.send("OK");

@@ -39,7 +39,7 @@ const loginUser = async (req, res, next) => {
     }
     // contraseña en user.password
     const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) { 
+    if (!isValidPassword) {
       throw {
         status: 400,
         error: "Incorrect password",
@@ -47,11 +47,11 @@ const loginUser = async (req, res, next) => {
       };
     }
 
-    if(!user.validEmail) {
+    if (!user.validEmail) {
       throw {
         status: 401,
         error: " Email verification needed",
-        message: "Look at the email address for verification" 
+        message: "Look at the email address for verification",
       };
     }
     // generar token
@@ -98,17 +98,34 @@ const validateUserEmail = async (req, res) => {
 };
 
 const newValidationEmail = async (req, res) => {
-	
-	try {
-		const { email} = req.body
-	sendWelcomeEmail(email)
-	res.status(201).json({message: "se generó un nuevo token"})
-
-	} catch (error) {
-	res . status(400) .json(error)
-	}
+  try {
+    const { email } = req.body;
+    sendWelcomeEmail(email);
+    res.status(201).json({ message: "se generó un nuevo token" });
+  } catch (error) {
+    res.status(400).json(error);
+  }
 };
 
+const uploadAvatar = async (req, res, next) => {
+  try {
+    const { file } = req;
+    const { id } = req.params;
+
+    // construir una url para la img (vizualizarla desde cualquier dispositivo)
+    const imageUrl = `${process.env.APP_URL}/avatar/${file.fileame}`;
+    await User.update(
+      { avatar: imageUrl },
+      {
+        where: { id },
+      }
+    );
+
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   registerUser,
@@ -116,4 +133,5 @@ module.exports = {
   validateUserEmail,
   newValidationEmail,
   getAllUsers,
+  uploadAvatar,
 };
